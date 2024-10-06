@@ -1,6 +1,8 @@
 public class BloqueEspejo extends Bloque {
-    public BloqueEspejo() {
+    public BloqueEspejo(Punto ptoCen) {
+        super(ptoCen);
         this.movil = true;
+        this.prioridadColision = 1;
     }
 
     @Override

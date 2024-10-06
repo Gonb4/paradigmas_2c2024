@@ -1,23 +1,33 @@
 import java.util.ArrayList;
 
 public class Laser {
+    private final Punto ubicEmisor;
     private ArrayList<Punto> trayectoria;
     private Direccion direccion;
     private boolean terminado;
+    private final int maxPtosTrayectoria;
 
-    public Laser(Punto ubicEmisor, Direccion dir) {
-        // add ubicEmisor a trayectoria
+    public Laser(Punto ubicEmisor, Direccion dir, int maxPtosTray) {
+        this.ubicEmisor = ubicEmisor;
+        this.trayectoria = new ArrayList<Punto>();
+        trayectoria.add(ubicEmisor);
         this.direccion = dir;
         this.terminado = false;
+        this.maxPtosTrayectoria = maxPtosTray;
     }
 
     public void agregarPtoTrayectoria(Punto punto) {
-        // add punto a trayectoria
+        trayectoria.add(punto);
+    }
+
+    public void borrarTrayectoria(Grilla grilla) {
+        this.trayectoria = new ArrayList<Punto>();
+        trayectoria.add(ubicEmisor);
+        grilla.borrarPtosLaser();
     }
 
     public Punto siguientePunto() {
-        // con el x e y del ultimo en trayectoria -> new Punto(direccion.siguienteX, direccion.siguienteY)
-        return null; // devolver el nuevo punto
+        return direccion.siguientePunto(trayectoria.getLast()); // devolver el nuevo punto
     }
 
     public void cambiarDireccion(Direccion dir) {
@@ -31,11 +41,11 @@ public class Laser {
     public void trazarTrayectoria(Grilla grilla) {
         // while not this.terminado
         // grilla.agregarPtoLaser(ultimo de trayectoria)
-        // add this.siguientePunto a trayectoria
+        // add this.siguientePunto a trayectoria // agrego el ultimo a la grilla y despues avanzo en la trayectoria asi empieza por el emisor
     }
 
-    public void bifurcar(Grilla grilla, Punto punto, Direccion dir) {
-        // laserAdicional = new Laser(punto, dir)
-        // laserAdicional.trazarTrayectoria(grilla)
+    public void bifurcar(Grilla grilla, Punto ptoBifur, Direccion dirBifur) {
+         Laser laserAdicional = new Laser(ptoBifur, dirBifur);
+         laserAdicional.trazarTrayectoria(grilla);
     }
 }

@@ -11,10 +11,27 @@ public class Localidad {
         this.ocupantes = new Bloque[3]; // 3 prioridades vidrio > espejo > cristal y opacos (como maximo habra 2 ocupantes)
     }
 
-    //un metodo ocupar por cada clase de bloque (prioridades) que devuelva un boolean si fue ocupada
+    public void agregarOcupante(Bloque ocupante) {
+        ocupantes[ocupante.getPrioridadColision()] = ocupante;
+    }
 
     public void quitarOcupante (Bloque ocupante) {
-        // remove de ocupantes
+        ocupantes[ocupante.getPrioridadColision()] = null;
+    }
+
+    public Bloque obtenerOcupante() { // solo deberia usar este metodo con localidades centrales porque deberian tener un unico ocupante
+        Bloque ocupante = null;
+        for (Bloque b : ocupantes) {
+            if (b == null) {
+                continue;
+            }
+            ocupante = b;
+        }
+        return ocupante;
+    }
+
+    public boolean esOcupable() {
+        return ocupable;
     }
 
     public void hacerOcupable() {
@@ -25,9 +42,11 @@ public class Localidad {
         this.ocupable = false;
     }
 
-    public Punto controlarColision(Laser laser) {
-        // por cada bloque en ocupantes: bloque.colisionar(this.punto, laser, grilla)
-        // devuelve null o un puntoExtra (creo que solo el bloque de cristal)
-        return null;
+    public Punto controlarColision(Laser laser, Grilla grilla) {
+        Punto ptoExtra = null;
+        for (Bloque b : ocupantes) {
+            ptoExtra = b.colisionar(laser, this.punto, grilla); // (solo BloqueCristal devuelve un punto extra)
+        }
+        return ptoExtra;
     }
 }

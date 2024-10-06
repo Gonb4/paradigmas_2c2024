@@ -5,15 +5,31 @@ public abstract class Bloque {
     Punto ptoDerecha;
     Punto ptoIzquierda;
     boolean movil;
+    int prioridadColision;
 
-    public void mover(Punto ptoCen, Punto ptoArr, Punto ptoAbj, Punto ptoDer, Punto ptoIzq) { // creo que va a tener que recibir localidades en vez de puntos
-        //if movil -> pide ocupar las 5 localidades -> si las ocupa (todas devuelven true) cambia sus 5 puntos y devuelve true
-        this.ptoCentro = ptoCen;
-        this.ptoArriba = ptoArr;
-        this.ptoAbajo = ptoAbj;
-        this.ptoDerecha = ptoDer;
-        this.ptoIzquierda = ptoIzq;
+    public Bloque(Punto ptoCen) {
+        establecerPuntos(ptoCen);
+    }
+
+    public boolean mover(Punto nuevoPtoCen) {
+        if (this.movil) {
+            establecerPuntos(nuevoPtoCen);
+            return true;
+        }
+        return false;
     }
 
     public abstract Punto colisionar(Laser laser, Punto punto, Grilla grilla); // devuelve null o un puntoExtra (creo que solo el bloque de cristal)
+
+    private void establecerPuntos(Punto ptoCen) {
+        this.ptoCentro = ptoCen;
+        this.ptoArriba = new Punto(ptoCen.x, ptoCen.y - 1);
+        this.ptoAbajo = new Punto(ptoCen.x, ptoCen.y + 1);
+        this.ptoDerecha = new Punto(ptoCen.x + 1, ptoCen.y);
+        this.ptoIzquierda = new Punto(ptoCen.x - 1, ptoCen.y);
+    }
+
+    public int getPrioridadColision() {
+        return prioridadColision;
+    }
 }

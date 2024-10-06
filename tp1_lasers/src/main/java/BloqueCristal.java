@@ -1,6 +1,8 @@
 public class BloqueCristal extends Bloque {
-    public BloqueCristal() {
+    public BloqueCristal(Punto ptoCen) {
+        super(ptoCen);
         this.movil = true;
+        this.prioridadColision = 2;
     }
 
     @Override

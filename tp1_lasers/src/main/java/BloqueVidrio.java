@@ -1,6 +1,8 @@
 public class BloqueVidrio extends Bloque {
-    public BloqueVidrio() {
+    public BloqueVidrio(Punto ptoCen) {
+        super(ptoCen);
         this.movil = true;
+        this.prioridadColision = 0;
     }
 
     @Override
