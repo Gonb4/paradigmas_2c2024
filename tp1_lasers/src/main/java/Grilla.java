@@ -17,11 +17,11 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
     }
 
     public Bloque seleccionarBloque(Punto ptoCenBloque) {
-        return matrizLocs[ptoCenBloque.x][ptoCenBloque.y].obtenerOcupante();
+        return matrizLocs[ptoCenBloque.y][ptoCenBloque.x].obtenerOcupante();
     }
 
     public void moverBloque(Bloque bloque, Punto ptoCenDest) { // podria recibir coordenadas o un punto, recibe instancia de bloque?
-        if (esCentroCelda(ptoCenDest) && matrizLocs[ptoCenDest.x][ptoCenDest.y].esOcupable()) {
+        if (esCentroCelda(ptoCenDest) && matrizLocs[ptoCenDest.y][ptoCenDest.x].esOcupable()) {
             Punto ptoCenOrig = bloque.ptoCentro;
             if (bloque.mover(ptoCenDest) == true) {
                 ocuparCelda(ptoCenDest, bloque);
@@ -35,7 +35,7 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
     }
 
     public void agregarPtoLaser(Laser laser, Punto pto) {
-        var localidad = matrizLocs[pto.x][pto.y];
+        var localidad = matrizLocs[pto.y][pto.x];
         puntosLaser.add(localidad.punto);
         Punto ptoExtra = localidad.controlarColision(laser, this);
         if (ptoExtra != null) {
@@ -61,22 +61,22 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
     }
 
     private void ocuparCelda(Punto ptoCen, Bloque bloque) {
-        matrizLocs[ptoCen.x][ptoCen.y].agregarOcupante(bloque); // ocupo localidad centro
-        matrizLocs[ptoCen.x][ptoCen.y].hacerInocupable();
-        matrizLocs[ptoCen.x][ptoCen.y - 1].agregarOcupante(bloque); // ocupo localidad arriba
-        matrizLocs[ptoCen.x][ptoCen.y + 1].agregarOcupante(bloque); // ocupo localidad abajo
-        matrizLocs[ptoCen.x + 1][ptoCen.y].agregarOcupante(bloque); // ocupo localidad derecha
-        matrizLocs[ptoCen.x - 1][ptoCen.y].agregarOcupante(bloque); // ocupo localidad izquierda
+        matrizLocs[ptoCen.y][ptoCen.x].agregarOcupante(bloque); // ocupo localidad centro
+        matrizLocs[ptoCen.y][ptoCen.x].hacerInocupable();
+        matrizLocs[ptoCen.y - 1][ptoCen.x].agregarOcupante(bloque); // ocupo localidad arriba
+        matrizLocs[ptoCen.y + 1][ptoCen.x].agregarOcupante(bloque); // ocupo localidad abajo
+        matrizLocs[ptoCen.y][ptoCen.x + 1].agregarOcupante(bloque); // ocupo localidad derecha
+        matrizLocs[ptoCen.y][ptoCen.x - 1].agregarOcupante(bloque); // ocupo localidad izquierda
     }
 
     private void liberarCelda(Punto ptoCen) {
-        Bloque bloqueOc = matrizLocs[ptoCen.x][ptoCen.y].obtenerOcupante();
-        matrizLocs[ptoCen.x][ptoCen.y].quitarOcupante(bloqueOc); // libero localidad centro
-        matrizLocs[ptoCen.x][ptoCen.y].hacerOcupable();
-        matrizLocs[ptoCen.x][ptoCen.y - 1].quitarOcupante(bloqueOc); // libero localidad arriba
-        matrizLocs[ptoCen.x][ptoCen.y + 1].quitarOcupante(bloqueOc); // libero localidad abajo
-        matrizLocs[ptoCen.x + 1][ptoCen.y].quitarOcupante(bloqueOc); // libero localidad derecha
-        matrizLocs[ptoCen.x - 1][ptoCen.y].quitarOcupante(bloqueOc); // libero localidad izquierda
+        Bloque bloqueOc = matrizLocs[ptoCen.y][ptoCen.x].obtenerOcupante();
+        matrizLocs[ptoCen.y][ptoCen.x].quitarOcupante(bloqueOc); // libero localidad centro
+        matrizLocs[ptoCen.y][ptoCen.x].hacerOcupable();
+        matrizLocs[ptoCen.y - 1][ptoCen.x].quitarOcupante(bloqueOc); // libero localidad arriba
+        matrizLocs[ptoCen.y + 1][ptoCen.x].quitarOcupante(bloqueOc); // libero localidad abajo
+        matrizLocs[ptoCen.y][ptoCen.x + 1].quitarOcupante(bloqueOc); // libero localidad derecha
+        matrizLocs[ptoCen.y][ptoCen.x - 1].quitarOcupante(bloqueOc); // libero localidad izquierda
     }
 
     //DESCARTADO
