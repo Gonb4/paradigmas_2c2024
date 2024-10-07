@@ -6,8 +6,8 @@ public class BloqueOpacoFijo extends Bloque {
     }
 
     @Override
-    public Punto colisionar(Laser laser, Punto punto, Grilla grilla) {
-        // terminar laser
+    public Punto colisionar(Laser laser, Punto ptoColision, Grilla grilla) {
+        laser.terminarTrayectoria();
         return null;
     }
 }

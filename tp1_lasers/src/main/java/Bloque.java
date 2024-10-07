@@ -19,7 +19,7 @@ public abstract class Bloque {
         return false;
     }
 
-    public abstract Punto colisionar(Laser laser, Punto punto, Grilla grilla); // devuelve null o un puntoExtra (creo que solo el bloque de cristal)
+    public abstract Punto colisionar(Laser laser, Punto ptoColision, Grilla grilla); // devuelve null o un puntoExtra (creo que solo el bloque de cristal)
 
     private void establecerPuntos(Punto ptoCen) {
         this.ptoCentro = ptoCen;

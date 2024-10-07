@@ -1,22 +1,27 @@
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Localidad {
-    private final Punto punto;
-    private Bloque[] ocupantes;
+    public final Punto punto;
+    private List<Bloque> ocupantes;
     private boolean ocupable;
 
-    public Localidad(Punto punto) {
+    public Localidad(Punto punto, boolean ocupable) {
         this.punto = punto;
-        this.ocupable = true;
-        this.ocupantes = new Bloque[3]; // 3 prioridades vidrio > espejo > cristal y opacos (como maximo habra 2 ocupantes)
+        this.ocupable = ocupable;
+        this.ocupantes = Arrays.asList(new Bloque[4]); // 3 prioridades vidrio > espejo > cristal y opacos (como maximo habra 2 ocupantes)
     }
 
     public void agregarOcupante(Bloque ocupante) {
-        ocupantes[ocupante.getPrioridadColision()] = ocupante;
+        ocupantes.add(ocupante.getPrioridadColision(), ocupante);
     }
 
     public void quitarOcupante (Bloque ocupante) {
-        ocupantes[ocupante.getPrioridadColision()] = null;
+        for (int i = 0; i < ocupantes.size(); i++) {
+            if (ocupantes.get(i) == ocupante) {
+                ocupantes.set(i, null);
+            }
+        }
     }
 
     public Bloque obtenerOcupante() { // solo deberia usar este metodo con localidades centrales porque deberian tener un unico ocupante
@@ -45,6 +50,9 @@ public class Localidad {
     public Punto controlarColision(Laser laser, Grilla grilla) {
         Punto ptoExtra = null;
         for (Bloque b : ocupantes) {
+            if (b == null) {
+                continue;
+            }
             ptoExtra = b.colisionar(laser, this.punto, grilla); // (solo BloqueCristal devuelve un punto extra)
         }
         return ptoExtra;

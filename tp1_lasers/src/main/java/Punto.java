@@ -6,4 +6,8 @@ public class Punto {
         this.x = x;
         this.y = y;
     }
+
+    public boolean equals(Punto otroPto) {
+        return (this.x == otroPto.x && this.y == otroPto.y);
+    }
 }

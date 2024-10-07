@@ -34,11 +34,14 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         puntosObjetivo.add(ptoObjetivo);
     }
 
-    /*agregarPtoLaser(laser, punto)
-        usar coords punto para buscar localidad en matriz
-		setPtosLaser.Add(instancia de punto guardado en la localidad)
-        if (ptoExtra = localidad.controlarColision()) != NULL
-		    this.agregarPtoLaser(laser, ptoExtra)*/
+    public void agregarPtoLaser(Laser laser, Punto pto) {
+        var localidad = matrizLocs[pto.x][pto.y];
+        puntosLaser.add(localidad.punto);
+        Punto ptoExtra = localidad.controlarColision(laser, this);
+        if (ptoExtra != null) {
+            this.agregarPtoLaser(laser, ptoExtra);
+        }
+    }
 
     public void borrarPtosLaser() {
         this.puntosLaser = new HashSet<>();
@@ -48,7 +51,14 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         return (punto.x % 2 != 0 && punto.y % 2 != 0);
     }
 
-    //public boolean objetivosAlcanzados()
+    public boolean objetivosAlcanzados() {
+        for (Punto p : puntosObjetivo) {
+            if (!puntosLaser.contains(p)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private void ocuparCelda(Punto ptoCen, Bloque bloque) {
         matrizLocs[ptoCen.x][ptoCen.y].agregarOcupante(bloque); // ocupo localidad centro
