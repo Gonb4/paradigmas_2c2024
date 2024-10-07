@@ -24,6 +24,7 @@ public class Laser {
         this.trayectoria = new ArrayList<Punto>();
         trayectoria.add(ubicEmisor);
         grilla.borrarPtosLaser();
+        this.terminado = false;
     }
 
     public Punto siguientePunto() {
@@ -50,6 +51,7 @@ public class Laser {
             }
             trayectoria.add(siguientePunto()); // agrego el ultimo a la grilla y despues avanzo en la trayectoria asi empieza por el emisor
         }
+        terminarTrayectoria();
     }
 
     public void bifurcar(Grilla grilla, Punto ptoBifur, Direccion dirBifur) {

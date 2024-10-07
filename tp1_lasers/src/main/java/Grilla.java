@@ -35,7 +35,12 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
     }
 
     public void agregarPtoLaser(Laser laser, Punto pto) {
-        var localidad = matrizLocs[pto.y][pto.x];
+        Localidad localidad = null;
+        try {localidad = matrizLocs[pto.y][pto.x];}
+        catch (ArrayIndexOutOfBoundsException _) {
+            laser.terminarTrayectoria();
+        }
+
         puntosLaser.add(localidad.punto);
         Punto ptoExtra = localidad.controlarColision(laser, this);
         if (ptoExtra != null) {

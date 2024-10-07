@@ -6,9 +6,9 @@ public class Localidad {
     private List<Bloque> ocupantes;
     private boolean ocupable;
 
-    public Localidad(Punto punto, boolean ocupable) {
+    public Localidad(Punto punto) {
         this.punto = punto;
-        this.ocupable = ocupable;
+        this.ocupable = true;
         this.ocupantes = Arrays.asList(new Bloque[4]); // 3 prioridades vidrio > espejo > cristal y opacos (como maximo habra 2 ocupantes)
     }
 
