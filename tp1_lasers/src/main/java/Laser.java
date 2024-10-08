@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Laser {
-    private final Punto ubicEmisor;
+    public final Punto ubicEmisor;
     private ArrayList<Punto> trayectoria;
     private Direccion direccion;
     private boolean terminado;

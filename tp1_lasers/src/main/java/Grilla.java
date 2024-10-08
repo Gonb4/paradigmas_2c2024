@@ -84,6 +84,14 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         matrizLocs[ptoCen.y][ptoCen.x - 1].quitarOcupante(bloqueOc); // libero localidad izquierda
     }
 
+    public Localidad[][] getMatrizLocs() {
+        return matrizLocs;
+    }
+
+    public ArrayList<Punto> getPuntosObjetivo() {
+        return puntosObjetivo;
+    }
+
     //DESCARTADO
     //agregarLocalidad() // para construir la matriz al parsear el archivo de texto
 }

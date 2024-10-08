@@ -1,15 +1,16 @@
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Localidad {
     public final Punto punto;
-    private List<Bloque> ocupantes;
+    private ArrayList<Bloque> ocupantes;
     private boolean ocupable;
 
     public Localidad(Punto punto) {
         this.punto = punto;
         this.ocupable = true;
-        this.ocupantes = Arrays.asList(new Bloque[4]); // 3 prioridades vidrio > espejo > cristal y opacos (como maximo habra 2 ocupantes)
+        this.ocupantes = new ArrayList<Bloque>(Arrays.asList(new Bloque[4])); // 3 prioridades vidrio > espejo > cristal y opacos (como maximo habra 2 ocupantes)
     }
 
     public void agregarOcupante(Bloque ocupante) {
