@@ -18,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Juego extends Application {
-    private VBox botones;
-    private StackPane panelJuego;
-    private GridPane grid;
-    private  int cellSize;
-
     private Grilla grilla;
     private ArrayList<Laser> lasers;
+
+    private final GridPane grid = new GridPane();
+    private StackPane[][] matrizSP;
+    private final int cellSize = 70;
 
     public static void main(String[] args) {
         launch(args); // Launch the JavaFX application
@@ -33,27 +32,17 @@ public class Juego extends Application {
     @Override
     public void start(Stage stage) {
         var root = new HBox();
-//        root.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
-//                + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
-//                + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
-        botones = new VBox();
-        panelJuego = new StackPane();
+        var botones = crearPanelBotones();
+        var panelJuego = new StackPane();
         panelJuego.setMaxSize(600, 600);
         panelJuego.setStyle("-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-color: blue;");
-        grid = new GridPane();
-        cellSize = 70;
+        Rectangle fondo = new Rectangle(600, 600, Color.WHITE);
 
-        Button btn1 = new Button("Level 1");
-        Button btn2 = new Button("Level 2");
-        Button btn3 = new Button("Level 3");
-        Button btn4 = new Button("Level 4");
-        Button btn5 = new Button("Level 5");
-        Button btn6 = new Button("Level 6");
+
         cargarNivel(1);
         Button accion = new Button("probar");
         accion.setOnAction(e -> {
-//            grid.getChildren().clear();
             grilla.moverBloque(grilla.seleccionarBloque(new Punto(7,5)), new Punto(7,3));
             for (Laser l : lasers) {
                 l.borrarTrayectoria(grilla);
@@ -64,8 +53,33 @@ public class Juego extends Application {
                 }
                 System.out.println();
             }
+
+            matrizSP = generarMatrizStackPane();
             poblarGrid();
         });
+        botones.getChildren().add(accion);
+
+        panelJuego.getChildren().addAll(fondo, grid);//, linea, grdpr);
+        StackPane.setMargin(grid, new Insets(30));
+//        StackPane.setMargin(grdpr, new Insets(30));
+//        StackPane.setAlignment(grid, Pos.CENTER);
+
+        root.getChildren().addAll(botones, panelJuego);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Juego - Lasers");
+        stage.show();
+    }
+
+    private VBox crearPanelBotones() {
+        var panel = new VBox();
+        Button btn1 = new Button("Level 1");
+        Button btn2 = new Button("Level 2");
+        Button btn3 = new Button("Level 3");
+        Button btn4 = new Button("Level 4");
+        Button btn5 = new Button("Level 5");
+        Button btn6 = new Button("Level 6");
+
         btn1.setOnAction(event -> cargarNivel(1));
         btn2.setOnAction(event -> cargarNivel(2));
         btn3.setOnAction(event -> cargarNivel(3));
@@ -73,24 +87,8 @@ public class Juego extends Application {
         btn5.setOnAction(event -> cargarNivel(5));
         btn6.setOnAction(event -> cargarNivel(6));
 
-        botones.getChildren().addAll(btn1, btn2, btn3, btn4, btn5, btn6, accion);
-        Rectangle fondo = new Rectangle(600, 600, Color.WHITE);
-
-        var linea = new Line(0, 300, 300, 600);
-        var  grdpr = new GridPane();
-        grdpr.add(new Rectangle(100, 100), 0, 0);
-
-        panelJuego.getChildren().addAll(fondo, grid);//, linea, grdpr);
-        StackPane.setMargin(grid, new Insets(30));
-        StackPane.setMargin(grdpr, new Insets(30));
-//        StackPane.setAlignment(grid, Pos.CENTER);
-        StackPane.setAlignment(linea, Pos.BOTTOM_LEFT);
-        root.getChildren().addAll(botones, panelJuego);
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Juego - Lasers");
-        stage.show();
+        panel.getChildren().addAll(btn1, btn2, btn3, btn4, btn5, btn6);
+        return panel;
     }
 
     private void cargarNivel(int n) {
@@ -103,31 +101,25 @@ public class Juego extends Application {
             case 5 -> parser = new Parser("src\\main\\resources\\java\\level5.dat");
             case 6 -> parser = new Parser("src\\main\\resources\\java\\level6.dat");
         }
-        grid.getChildren().clear();
         grilla = parser.getGrilla();
         lasers = parser.getLasers();
-//        for (Laser l : lasers) {l.trazarTrayectoria(grilla);}
-//        poblarGrid();
-        //jugarTurno()
-        for (Laser l : lasers) {
-            l.trazarTrayectoria(grilla);
-            System.out.print(l.ubicEmisor.x + "," + l.ubicEmisor.y + ": ");
-            for (Punto p : l.getTrayectoria()) {
-                System.out.print("(" + p.x + ", " + p.y + ") ");
-            }
-            System.out.println();
-        }
+        for (Laser l : lasers) {l.trazarTrayectoria(grilla);}
+        matrizSP = generarMatrizStackPane();
         poblarGrid();
+        //jugarTurno()
+//        for (Laser l : lasers) {
+//            l.trazarTrayectoria(grilla);
+//            System.out.print(l.ubicEmisor.x + "," + l.ubicEmisor.y + ": ");
+//            for (Punto p : l.getTrayectoria()) {
+//                System.out.print("(" + p.x + ", " + p.y + ") ");
+//            }
+//            System.out.println();
+//        }
+//        poblarGrid();
     }
 
     private void poblarGrid() {
-        var matrizSP = generarMatrizStackPane(grilla.getMatrizLocs());
-
-        agregarBloquesAMatrizSP(matrizSP);
-        agregarEmisoresAMatrizSP(matrizSP);
-        agregarObjetivosAMatrizSP(matrizSP);
-        for (Laser l : lasers) {agregarTrayLaserAMatrizSP(matrizSP, l);}
-
+        grid.getChildren().clear();
         for (int i = 1; i < matrizSP.length; i+=2) {
             for (int j = 1; j < matrizSP[i].length; j+=2) {
                 grid.add(matrizSP[i][j], j, i);
@@ -135,14 +127,19 @@ public class Juego extends Application {
         }
     }
 
-    private StackPane[][] generarMatrizStackPane(Localidad[][] localidades) {
-        var matrizSP = new StackPane[localidades.length][localidades[0].length];
-        for (int i = 0; i < localidades.length; i++) {
-            for ( int j = 0; j < localidades[i].length; j++) {
-                matrizSP[i][j] = new StackPane();
+    private StackPane[][] generarMatrizStackPane() {
+        var matriz = new StackPane[grilla.getMatrizLocs().length][grilla.getMatrizLocs()[0].length];
+        for (int i = 0; i < matriz.length; i++) {
+            for ( int j = 0; j < matriz[i].length; j++) {
+                matriz[i][j] = new StackPane();
             }
         }
-        return matrizSP;
+        agregarBloquesAMatrizSP(matriz);
+        agregarObjetivosAMatrizSP(matriz);
+        agregarEmisoresAMatrizSP(matriz);
+        for (Laser l : lasers) {agregarTrayLaserAMatrizSP(matriz, l);}
+
+        return matriz;
     }
 
     private void agregarBloquesAMatrizSP(StackPane[][] matrizSP) {
