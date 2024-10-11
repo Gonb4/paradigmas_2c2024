@@ -4,6 +4,7 @@ public class Laser {
     public final Punto ubicEmisor;
     private ArrayList<Punto> trayectoria;
     private Direccion direccion;
+    private Direccion direccOriginal;
     private boolean terminado;
     private final int maxPtosTrayectoria; // para evitar trayectoria infinita (puede ser cualquier valor grande)
 
@@ -12,6 +13,7 @@ public class Laser {
         this.trayectoria = new ArrayList<Punto>();
         trayectoria.add(ubicEmisor);
         this.direccion = dir;
+        this.direccOriginal = dir;
         this.terminado = false;
         this.maxPtosTrayectoria = maxPtosTray;
     }
@@ -20,14 +22,19 @@ public class Laser {
         trayectoria.add(punto);
     }
 
+    public void quitarUltPtoTrayectoria () {
+        trayectoria.removeLast();
+    }
+
     public void borrarTrayectoria(Grilla grilla) {
         this.trayectoria = new ArrayList<Punto>();
         trayectoria.add(ubicEmisor);
         grilla.borrarPtosLaser();
         this.terminado = false;
+        this.direccion = direccOriginal;
     }
 
-    public Punto siguientePunto() {
+    private Punto siguientePunto() {
         return direccion.siguientePunto(trayectoria.getLast()); // devolver el nuevo punto
     }
 
@@ -43,12 +50,14 @@ public class Laser {
         this.terminado = true;
     }
 
+    public ArrayList<Punto> getTrayectoria() {
+        return trayectoria;
+    }
+
     public void trazarTrayectoria(Grilla grilla) {
-        while (this.trayectoria.size() < maxPtosTrayectoria) {
+        while (trayectoria.size() < maxPtosTrayectoria) {
             grilla.agregarPtoLaser(this, trayectoria.getLast());
-            if (this.terminado) {
-                break;
-            }
+            if (terminado) {return;}
             trayectoria.add(siguientePunto()); // agrego el ultimo a la grilla y despues avanzo en la trayectoria asi empieza por el emisor
         }
         terminarTrayectoria();

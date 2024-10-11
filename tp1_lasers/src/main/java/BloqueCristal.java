@@ -8,17 +8,26 @@ public class BloqueCristal extends Bloque {
     @Override
     public Punto colisionar(Laser laser, Punto ptoColision, Grilla grilla) {
         Punto ptoExtra = null;
+        var direcc = laser.getDireccion();
 
         if (ptoColision.equals(ptoArriba)) {
-            ptoExtra = ptoAbajo;
+            if (direcc == Direccion.SURESTE || direcc == Direccion.SUDOESTE) {
+                ptoExtra = ptoAbajo;
+            }
         } else if (ptoColision.equals(ptoAbajo)) {
-            ptoExtra = ptoArriba;
+            if (direcc == Direccion.NORESTE || direcc == Direccion.NOROESTE) {
+                ptoExtra = ptoArriba;
+            }
         } else if (ptoColision.equals(ptoDerecha)) {
-            ptoExtra = ptoIzquierda;
+            if (direcc == Direccion.SUDOESTE || direcc == Direccion.NOROESTE) {
+                ptoExtra = ptoIzquierda;
+            }
         } else if (ptoColision.equals(ptoIzquierda)) {
-            ptoExtra = ptoDerecha;
+            if (direcc == Direccion.SURESTE || direcc == Direccion.NORESTE) {
+                ptoExtra = ptoDerecha;
+            }
         }
-        laser.agregarPtoTrayectoria(ptoExtra);
+        if (ptoExtra != null) {laser.agregarPtoTrayectoria(ptoExtra);}
         return ptoExtra;
     }
 }

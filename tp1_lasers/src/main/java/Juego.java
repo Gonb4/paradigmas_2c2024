@@ -10,16 +10,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Juego extends Application {
-    private HBox root;
     private VBox botones;
     private StackPane panelJuego;
     private GridPane grid;
@@ -34,9 +32,15 @@ public class Juego extends Application {
 
     @Override
     public void start(Stage stage) {
-        root = new HBox();
+        var root = new HBox();
+//        root.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
+//                + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
+//                + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
         botones = new VBox();
         panelJuego = new StackPane();
+        panelJuego.setMaxSize(600, 600);
+        panelJuego.setStyle("-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-color: blue;");
         grid = new GridPane();
         cellSize = 70;
 
@@ -46,7 +50,22 @@ public class Juego extends Application {
         Button btn4 = new Button("Level 4");
         Button btn5 = new Button("Level 5");
         Button btn6 = new Button("Level 6");
-
+        cargarNivel(1);
+        Button accion = new Button("probar");
+        accion.setOnAction(e -> {
+//            grid.getChildren().clear();
+            grilla.moverBloque(grilla.seleccionarBloque(new Punto(7,5)), new Punto(7,3));
+            for (Laser l : lasers) {
+                l.borrarTrayectoria(grilla);
+                l.trazarTrayectoria(grilla);
+                System.out.print(l.ubicEmisor.x + "," + l.ubicEmisor.y + ": ");
+                for (Punto p : l.getTrayectoria()) {
+                    System.out.print("(" + p.x + ", " + p.y + ") ");
+                }
+                System.out.println();
+            }
+            poblarGrid();
+        });
         btn1.setOnAction(event -> cargarNivel(1));
         btn2.setOnAction(event -> cargarNivel(2));
         btn3.setOnAction(event -> cargarNivel(3));
@@ -54,20 +73,27 @@ public class Juego extends Application {
         btn5.setOnAction(event -> cargarNivel(5));
         btn6.setOnAction(event -> cargarNivel(6));
 
-        botones.getChildren().addAll(btn1, btn2, btn3, btn4, btn5, btn6);
-        Rectangle fondo = new Rectangle(530, 570, Color.WHITE);
-        panelJuego.getChildren().addAll(fondo, grid);
+        botones.getChildren().addAll(btn1, btn2, btn3, btn4, btn5, btn6, accion);
+        Rectangle fondo = new Rectangle(600, 600, Color.WHITE);
+
+        var linea = new Line(0, 300, 300, 600);
+        var  grdpr = new GridPane();
+        grdpr.add(new Rectangle(100, 100), 0, 0);
+
+        panelJuego.getChildren().addAll(fondo, grid);//, linea, grdpr);
         StackPane.setMargin(grid, new Insets(30));
-        StackPane.setAlignment(fondo, Pos.CENTER_RIGHT);
+        StackPane.setMargin(grdpr, new Insets(30));
+//        StackPane.setAlignment(grid, Pos.CENTER);
+        StackPane.setAlignment(linea, Pos.BOTTOM_LEFT);
         root.getChildren().addAll(botones, panelJuego);
 
-        Scene scene = new Scene(root, 600, 600);
+        Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Juego - Lasers");
         stage.show();
     }
 
-    public void cargarNivel(int n) {
+    private void cargarNivel(int n) {
         Parser parser = null;
         switch (n) {
             case 1 -> parser = new Parser("src\\main\\resources\\java\\level1.dat");
@@ -80,18 +106,30 @@ public class Juego extends Application {
         grid.getChildren().clear();
         grilla = parser.getGrilla();
         lasers = parser.getLasers();
-        poblarGrid(grilla.getMatrizLocs(), lasers, grilla.getPuntosObjetivo());
+//        for (Laser l : lasers) {l.trazarTrayectoria(grilla);}
+//        poblarGrid();
+        //jugarTurno()
+        for (Laser l : lasers) {
+            l.trazarTrayectoria(grilla);
+            System.out.print(l.ubicEmisor.x + "," + l.ubicEmisor.y + ": ");
+            for (Punto p : l.getTrayectoria()) {
+                System.out.print("(" + p.x + ", " + p.y + ") ");
+            }
+            System.out.println();
+        }
+        poblarGrid();
     }
 
-    private void poblarGrid(Localidad[][] localidades, ArrayList<Laser> lasers, ArrayList<Punto> ptsObj) {
-        var matrizSP = generarMatrizStackPane(localidades);
+    private void poblarGrid() {
+        var matrizSP = generarMatrizStackPane(grilla.getMatrizLocs());
 
-        agregarBloquesAMatrizSP(matrizSP, localidades);
-        agregarLasersAMatrizSP(matrizSP, lasers);
-        agregarObjetivosAMatrizSP(matrizSP, ptsObj);
+        agregarBloquesAMatrizSP(matrizSP);
+        agregarEmisoresAMatrizSP(matrizSP);
+        agregarObjetivosAMatrizSP(matrizSP);
+        for (Laser l : lasers) {agregarTrayLaserAMatrizSP(matrizSP, l);}
 
-        for (int i = 0; i < matrizSP.length; i++) {
-            for (int j = 0; j < matrizSP[i].length; j++) {
+        for (int i = 1; i < matrizSP.length; i+=2) {
+            for (int j = 1; j < matrizSP[i].length; j+=2) {
                 grid.add(matrizSP[i][j], j, i);
             }
         }
@@ -107,7 +145,8 @@ public class Juego extends Application {
         return matrizSP;
     }
 
-    private void agregarBloquesAMatrizSP(StackPane[][] matrizSP, Localidad[][] localidades) {
+    private void agregarBloquesAMatrizSP(StackPane[][] matrizSP) {
+        var localidades = grilla.getMatrizLocs();
         for (int i = 1; i < localidades.length; i+=2) {
             for (int j = 1; j < localidades[i].length; j+=2) {
                 Localidad localidad = localidades[i][j];
@@ -133,22 +172,98 @@ public class Juego extends Application {
         }
     }
 
-    private void agregarLasersAMatrizSP(StackPane[][] matrizSP, ArrayList<Laser> lasers) {
+    private void agregarEmisoresAMatrizSP(StackPane[][] matrizSP) {
         for (Laser l : lasers) {
             Circle emisor = new Circle(7, Color.RED);
-            matrizSP[l.ubicEmisor.y][l.ubicEmisor.x].getChildren().add(emisor);
+//            matrizSP[l.ubicEmisor.y][l.ubicEmisor.x].getChildren().add(emisor);
+            var ptoCenCelda = calcularCoordsSPCelda(l.ubicEmisor);
+            agregarCirculoAMatrizSP(matrizSP, ptoCenCelda, emisor, l.ubicEmisor);
         }
     }
 
-    private void agregarObjetivosAMatrizSP(StackPane[][] matrizSP, ArrayList<Punto> ptsObj) {
-        for (Punto o : ptsObj) {
-            Circle objetivo = new Circle(7, Color.WHITE);
+    private void agregarObjetivosAMatrizSP(StackPane[][] matrizSP) {
+        for (Punto po : grilla.getPuntosObjetivo()) {
+            Circle objetivo = new Circle(5, Color.WHITE);
             objetivo.setStroke(Color.RED);
-            matrizSP[o.y][o.x].getChildren().add(objetivo);
+            objetivo.setStrokeWidth(3);
+//            matrizSP[po.y][po.x].getChildren().add(objetivo);
+            var ptoCenCelda = calcularCoordsSPCelda(po);
+            agregarCirculoAMatrizSP(matrizSP, ptoCenCelda, objetivo, po);
         }
+    }
+
+    private Punto calcularCoordsSPCelda(Punto pto) {
+        var x = pto.x;
+        var y = pto.y;
+
+        if (x == 0) {x += 1;}
+        if (y == 0) {y += 1;}
+        if (x % 2 == 0) {x -= 1;}
+        if (y % 2 == 0) {y -= 1;}
+
+        return new Punto(x, y);
+    }
+
+    private void agregarCirculoAMatrizSP(StackPane[][] matrizSP, Punto ptoCenCelda, Circle elem, Punto pto) {
+        matrizSP[ptoCenCelda.y][ptoCenCelda.x].getChildren().add(elem);
+
+        if (pto.x < ptoCenCelda.x) {StackPane.setAlignment(elem, Pos.CENTER_LEFT);} // solo pasa con x = 0, borde izquierdo de grilla
+        if (pto.x > ptoCenCelda.x) {StackPane.setAlignment(elem, Pos.CENTER_RIGHT);}
+        if (pto.y < ptoCenCelda.y) {StackPane.setAlignment(elem, Pos.TOP_CENTER);} // solo pasa con y = 0, borde inferior de grilla
+        if (pto.y > ptoCenCelda.y) {StackPane.setAlignment(elem, Pos.BOTTOM_CENTER);}
+    }
+
+    private void agregarTrayLaserAMatrizSP(StackPane[][] matrizSP, Laser laser) {
+        var trayectoria = laser.getTrayectoria();
+        for (int i = 1; i < trayectoria.size(); i++) {
+            var orig = trayectoria.get(i - 1);
+            var dest = trayectoria.get(i);
+            var ptoCenCelda = calcularCoordsSPCelda(orig, dest);
+            var tramo = crearTramoTrayLaser(ptoCenCelda, orig, dest); // linea con largo y angulo correcto
+            agregarLineaAMatrizSP(matrizSP, ptoCenCelda, tramo);
+        }
+    }
+
+    private Punto calcularCoordsSPCelda(Punto origen, Punto destino) {
+        var xAux = (origen.x + destino.x) / 2; // division entera
+        var yAux = (origen.y + destino.y) / 2; // division entera
+
+        if (xAux % 2 == 0) {xAux += 1;}
+        if (yAux % 2 == 0) {yAux += 1;}
+
+        return new Punto(xAux, yAux);
+    }
+
+    private Line crearTramoTrayLaser(Punto ptoCenCelda, Punto origen, Punto destino) {
+        var origenCoords = new Punto(ptoCenCelda.x - 1, ptoCenCelda.y - 1);
+
+        var xOrigAjust = (origen.x - origenCoords.x) * cellSize/2;
+        var yOrigAjust = (origen.y - origenCoords.y) * cellSize/2;
+        var xDestAjust = (destino.x - origenCoords.x) * cellSize/2;
+        var yDestAjust = (destino.y - origenCoords.y) * cellSize/2;
+
+        var tramo = new Line(xOrigAjust, yOrigAjust, xDestAjust, yDestAjust);
+        tramo.setStroke(Color.RED);
+//        tramo.setStrokeWidth(2);
+        return tramo;
+    }
+
+    private void agregarLineaAMatrizSP(StackPane[][] matrizSP, Punto ptoCenCelda, Line linea) {
+        matrizSP[ptoCenCelda.y][ptoCenCelda.x].getChildren().add(linea);
+
+        if (linea.getStartY() == linea.getEndY()) {return;} // horizontal: -- (StackPane ya lo alinea en el centro)
+        if (linea.getStartX() == linea.getEndX()) {return;} // vertical: | (StackPane ya lo alinea en el centro)
+
+        if (Math.min(linea.getStartY(), linea.getEndY()) < cellSize/2) { // diagonales: /\ (superiores)
+            if (Math.max(linea.getStartX(), linea.getEndX()) > cellSize/2) {StackPane.setAlignment(linea, Pos.TOP_RIGHT);} // diagonal: \
+            else {StackPane.setAlignment(linea, Pos.TOP_LEFT);} // diagonal: /
+        } else { // diagonales: \/ (inferiores)
+            if (Math.max(linea.getStartX(), linea.getEndX()) > cellSize/2) {StackPane.setAlignment(linea, Pos.BOTTOM_RIGHT);} // diagonal: /
+            else {StackPane.setAlignment(linea, Pos.BOTTOM_LEFT);} // diagonal: \
+        }
+//        System.out.println(ptoCenCelda.x + "," + ptoCenCelda.y + " " + linea);
     }
 }
-
 
 
 //    @Override

@@ -39,6 +39,8 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         try {localidad = matrizLocs[pto.y][pto.x];}
         catch (ArrayIndexOutOfBoundsException _) {
             laser.terminarTrayectoria();
+            laser.quitarUltPtoTrayectoria();
+            return;
         }
 
         puntosLaser.add(localidad.punto);
@@ -91,7 +93,4 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
     public ArrayList<Punto> getPuntosObjetivo() {
         return puntosObjetivo;
     }
-
-    //DESCARTADO
-    //agregarLocalidad() // para construir la matriz al parsear el archivo de texto
 }
