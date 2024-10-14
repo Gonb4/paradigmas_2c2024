@@ -10,23 +10,24 @@ import java.util.ArrayList;
 public class MatrizStackPane {
     private StackPane[][] matriz;
 
+    private final Juego juego;
     private final Grilla grilla;
     private final ArrayList<Laser> lasers;
-    private final int cellSize;
+    private final int cellSize = Constantes.CELL_SIZE;
 
-    public MatrizStackPane(Grilla grilla, ArrayList<Laser> lasers) {
+    public MatrizStackPane(Juego juego, Grilla grilla, ArrayList<Laser> lasers) {
+        this.juego = juego;
         this.grilla = grilla;
         this.lasers = lasers;
-        this.cellSize = 70;
-        this.matriz = new StackPane[grilla.getMatrizLocs().length][grilla.getMatrizLocs()[0].length];
-        completarMatriz();
+        poblarMatriz();
     }
 
     public StackPane[][] getMatriz(){
         return matriz;
     }
 
-    private void completarMatriz() {
+    public void poblarMatriz() {
+        matriz = new StackPane[grilla.getMatrizLocs().length][grilla.getMatrizLocs()[0].length];
         for (int i = 0; i < matriz.length; i++) {
             for ( int j = 0; j < matriz[i].length; j++) {
                 matriz[i][j] = new StackPane();
@@ -42,25 +43,8 @@ public class MatrizStackPane {
         var localidades = grilla.getMatrizLocs();
         for (int i = 1; i < localidades.length; i+=2) {
             for (int j = 1; j < localidades[i].length; j+=2) {
-                Localidad localidad = localidades[i][j];
-                Rectangle cell = new Rectangle(cellSize, cellSize);
-                cell.setStroke(Color.BLACK);
-
-                switch (localidad.obtenerOcupante()) {
-                    case null -> {
-                        if (!localidad.esOcupable()) {
-                            cell.setFill(Color.WHITE);
-                            cell.setStroke(null);
-                        } else {cell.setFill(Color.LIGHTGRAY);}
-                    }
-                    case BloqueOpacoFijo bloqueOpacoFijo -> cell.setFill(Color.BLACK);
-                    case BloqueOpacoMovil bloqueOpacoMovil -> cell.setFill(Color.DIMGRAY);
-                    case BloqueCristal bloqueCristal -> cell.setFill(Color.DARKTURQUOISE);
-                    case BloqueEspejo bloqueEspejo -> cell.setFill(Color.DARKCYAN);
-                    case BloqueVidrio bloqueVidrio -> cell.setFill(Color.GHOSTWHITE);
-                    default -> {break;}
-                }
-                matriz[i][j].getChildren().add(cell);
+                Celda celda = new Celda(juego, localidades[i][j]);
+                matriz[i][j].getChildren().addAll(celda.getFondo(), celda.getRectangulo());
             }
         }
     }
@@ -107,14 +91,17 @@ public class MatrizStackPane {
     }
 
     private void agregarTrayLaser(Laser laser) {
-        var trayectoria = laser.getTrayectoria();
-        for (int i = 1; i < trayectoria.size(); i++) {
-            var orig = trayectoria.get(i - 1);
-            var dest = trayectoria.get(i);
-            var ptoCenCelda = calcularCoordsCelda(orig, dest);
-            var tramo = crearTramoTrayLaser(ptoCenCelda, orig, dest); // linea con largo y angulo correcto
-            agregarLinea(ptoCenCelda, tramo);
+        for (Laser rayo : laser.getRayos()) {
+            var trayectoria = rayo.getTrayectoria();
+            for (int i = 1; i < trayectoria.size(); i++) {
+                var orig = trayectoria.get(i - 1);
+                var dest = trayectoria.get(i);
+                var ptoCenCelda = calcularCoordsCelda(orig, dest);
+                var tramo = crearTramoTrayLaser(ptoCenCelda, orig, dest); // linea con largo y angulo correcto
+                agregarLinea(ptoCenCelda, tramo);
+            }
         }
+
     }
 
     private Punto calcularCoordsCelda(Punto origen, Punto destino) {

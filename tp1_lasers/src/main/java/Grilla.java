@@ -16,22 +16,22 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         ocuparCelda(ptoCen, bloque);
     }
 
-    public Bloque seleccionarBloque(Punto ptoCenBloque) {
-        return matrizLocs[ptoCenBloque.y][ptoCenBloque.x].obtenerOcupante();
-    }
+//    public Bloque seleccionarBloque(Punto ptoCenBloque) { // se volvio innecesario porque se almacenan las instancias de bloque en su representacion visual
+//        return matrizLocs[ptoCenBloque.y][ptoCenBloque.x].obtenerOcupante();
+//    }
 
     public void moverBloque(Bloque bloque, Punto ptoCenDest) { // podria recibir coordenadas o un punto, recibe instancia de bloque?
-        if (esCentroCelda(ptoCenDest) && matrizLocs[ptoCenDest.y][ptoCenDest.x].esOcupable()) {
+        if (esCentroCelda(ptoCenDest) && matrizLocs[ptoCenDest.y][ptoCenDest.x].esOcupable()) { // se volvio innecesario el esCentroCelda() porque la representacion visual permite manejar solo coordenadas centrales
             Punto ptoCenOrig = bloque.ptoCentro;
             if (bloque.mover(ptoCenDest) == true) {
-                ocuparCelda(ptoCenDest, bloque);
                 liberarCelda(ptoCenOrig);
+                ocuparCelda(ptoCenDest, bloque);
             }
         }
     }
 
     public void agregarObjetivo(Punto ptoObjetivo) { // asumir que es una localidad valida (o sea NO central), usar este metodo a medida que se crea la grilla (cuando se instancie un nuevo punto para agregar a la matriz tambien lo agrego a los puntosObjetivo)
-        puntosObjetivo.add(ptoObjetivo);
+        puntosObjetivo.add(matrizLocs[ptoObjetivo.y][ptoObjetivo.x].punto);
     }
 
     public void agregarPtoLaser(Laser laser, Punto pto) {
@@ -54,7 +54,7 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         this.puntosLaser = new HashSet<>();
     }
 
-    private boolean esCentroCelda(Punto punto) { // x e y tienen que ser ambos impares para que sea central, podria recibir un punto o coords
+    private boolean esCentroCelda(Punto punto) { // x e y tienen que ser ambos impares para que sea central
         return (punto.x % 2 != 0 && punto.y % 2 != 0);
     }
 

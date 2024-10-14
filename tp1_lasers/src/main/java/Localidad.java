@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.ArrayList;
 
 public class Localidad {
     public final Punto punto;
@@ -18,11 +17,7 @@ public class Localidad {
     }
 
     public void quitarOcupante (Bloque ocupante) {
-        for (int i = 0; i < ocupantes.size(); i++) {
-            if (ocupantes.get(i) == ocupante) {
-                ocupantes.set(i, null);
-            }
-        }
+        ocupantes.remove(ocupante);
     }
 
     public Bloque obtenerOcupante() { // solo deberia usar este metodo con localidades centrales porque deberian tener un unico ocupante
@@ -50,12 +45,20 @@ public class Localidad {
 
     public Punto controlarColision(Laser laser, Grilla grilla) {
         Punto ptoExtra = null;
-        for (Bloque b : ocupantes) {
-            if (b == null) {
-                continue;
+        if (hayDobleEspejo()) {
+            laser.terminarTrayectoria();
+        } else {
+            for (Bloque b : ocupantes) {
+                if (b == null) {
+                    continue;
+                }
+                ptoExtra = b.colisionar(laser, this.punto, grilla); // (solo BloqueCristal devuelve un punto extra)
             }
-            ptoExtra = b.colisionar(laser, this.punto, grilla); // (solo BloqueCristal devuelve un punto extra)
         }
         return ptoExtra;
+    }
+
+    private boolean hayDobleEspejo() {
+        return ((ocupantes.get(Constantes.PRIORIDAD_COLISION_ESPEJO) instanceof BloqueEspejo) && (ocupantes.get(Constantes.PRIORIDAD_COLISION_ESPEJO + 1) instanceof BloqueEspejo));
     }
 }

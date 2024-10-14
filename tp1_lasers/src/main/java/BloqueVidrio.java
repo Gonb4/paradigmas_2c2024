@@ -2,7 +2,7 @@ public class BloqueVidrio extends Bloque {
     public BloqueVidrio(Punto ptoCen) {
         super(ptoCen);
         this.movil = true;
-        this.prioridadColision = 0;
+        this.prioridadColision = Constantes.PRIORIDAD_COLISION_VIDRIO;
     }
 
     @Override

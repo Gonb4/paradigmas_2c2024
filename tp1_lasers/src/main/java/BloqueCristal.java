@@ -2,7 +2,7 @@ public class BloqueCristal extends Bloque {
     public BloqueCristal(Punto ptoCen) {
         super(ptoCen);
         this.movil = true;
-        this.prioridadColision = 2;
+        this.prioridadColision = Constantes.PRIORIDAD_COLISION_CRISTAL;
     }
 
     @Override

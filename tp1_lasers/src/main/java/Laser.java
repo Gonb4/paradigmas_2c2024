@@ -7,6 +7,7 @@ public class Laser {
     private Direccion direccOriginal;
     private boolean terminado;
     private final int maxPtosTrayectoria; // para evitar trayectoria infinita (puede ser cualquier valor grande)
+    private ArrayList<Laser> rayos;
 
     public Laser(Punto ubicEmisor, Direccion dir, int maxPtosTray) {
         this.ubicEmisor = ubicEmisor;
@@ -16,6 +17,8 @@ public class Laser {
         this.direccOriginal = dir;
         this.terminado = false;
         this.maxPtosTrayectoria = maxPtosTray;
+        this.rayos = new ArrayList<Laser>();
+        rayos.add(this);
     }
 
     public void agregarPtoTrayectoria(Punto punto) {
@@ -29,9 +32,10 @@ public class Laser {
     public void borrarTrayectoria(Grilla grilla) {
         this.trayectoria = new ArrayList<Punto>();
         trayectoria.add(ubicEmisor);
-        grilla.borrarPtosLaser();
         this.terminado = false;
         this.direccion = direccOriginal;
+        this.rayos.clear();
+        this.rayos.add(this);
     }
 
     private Punto siguientePunto() {
@@ -65,6 +69,11 @@ public class Laser {
 
     public void bifurcar(Grilla grilla, Punto ptoBifur, Direccion dirBifur) {
          Laser laserAdicional = new Laser(ptoBifur, dirBifur, this.maxPtosTrayectoria);
+         rayos.add(laserAdicional);
          laserAdicional.trazarTrayectoria(grilla);
+    }
+
+    public ArrayList<Laser> getRayos() {
+        return rayos;
     }
 }

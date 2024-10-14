@@ -2,7 +2,7 @@ public class BloqueOpacoFijo extends Bloque {
     public BloqueOpacoFijo(Punto ptoCen) {
         super(ptoCen);
         this.movil = false;
-        this.prioridadColision = 2;
+        this.prioridadColision = Constantes.PRIORIDAD_COLISION_OPACO;
     }
 
     @Override
