@@ -3,8 +3,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-
 import java.util.ArrayList;
 
 public class MatrizStackPane {
@@ -52,7 +50,6 @@ public class MatrizStackPane {
     private void agregarEmisores() {
         for (Laser l : lasers) {
             Circle emisor = new Circle(7, Color.RED);
-//            matriz[l.ubicEmisor.y][l.ubicEmisor.x].getChildren().add(emisor);
             var ptoCenCelda = calcularCoordsCelda(l.ubicEmisor);
             agregarCirculo(ptoCenCelda, emisor, l.ubicEmisor);
         }
@@ -63,7 +60,6 @@ public class MatrizStackPane {
             Circle objetivo = new Circle(5, Color.WHITE);
             objetivo.setStroke(Color.RED);
             objetivo.setStrokeWidth(3);
-//            matriz[po.y][po.x].getChildren().add(objetivo);
             var ptoCenCelda = calcularCoordsCelda(po);
             agregarCirculo(ptoCenCelda, objetivo, po);
         }
@@ -101,7 +97,6 @@ public class MatrizStackPane {
                 agregarLinea(ptoCenCelda, tramo);
             }
         }
-
     }
 
     private Punto calcularCoordsCelda(Punto origen, Punto destino) {
@@ -141,6 +136,5 @@ public class MatrizStackPane {
             if (Math.max(linea.getStartX(), linea.getEndX()) > cellSize/2) {StackPane.setAlignment(linea, Pos.BOTTOM_RIGHT);} // diagonal: /
             else {StackPane.setAlignment(linea, Pos.BOTTOM_LEFT);} // diagonal: \
         }
-//        System.out.println(ptoCenCelda.x + "," + ptoCenCelda.y + " " + linea);
     }
 }

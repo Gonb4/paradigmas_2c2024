@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN PUNTO QUE TENGA UNAS COORDENADAS DETERMINADAS
-    private final Localidad[][] matrizLocs; // creo que va a tener que ser con arraylists para ir generando la matriz con el archivo de texto
+    private final Localidad[][] matrizLocs;
     private HashSet<Punto> puntosLaser;
     private ArrayList<Punto> puntosObjetivo;
 
@@ -12,7 +12,7 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         this.puntosObjetivo = new ArrayList<Punto>();
     }
 
-    public void agregarBloque(Bloque bloque, Punto ptoCen) { // creo que podemos asumir que no se va a tratar de agregar en localidades invalidas, usaremos este metodo solo para generar la grilla
+    public void agregarBloque(Bloque bloque, Punto ptoCen) { // podemos asumir que no se va a tratar de agregar en localidades invalidas, usaremos este metodo solo para generar la grilla
         ocuparCelda(ptoCen, bloque);
     }
 
@@ -20,7 +20,7 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
 //        return matrizLocs[ptoCenBloque.y][ptoCenBloque.x].obtenerOcupante();
 //    }
 
-    public void moverBloque(Bloque bloque, Punto ptoCenDest) { // podria recibir coordenadas o un punto, recibe instancia de bloque?
+    public void moverBloque(Bloque bloque, Punto ptoCenDest) {
         if (esCentroCelda(ptoCenDest) && matrizLocs[ptoCenDest.y][ptoCenDest.x].esOcupable()) { // se volvio innecesario el esCentroCelda() porque la representacion visual permite manejar solo coordenadas centrales
             Punto ptoCenOrig = bloque.ptoCentro;
             if (bloque.mover(ptoCenDest) == true) {
@@ -30,7 +30,7 @@ public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN
         }
     }
 
-    public void agregarObjetivo(Punto ptoObjetivo) { // asumir que es una localidad valida (o sea NO central), usar este metodo a medida que se crea la grilla (cuando se instancie un nuevo punto para agregar a la matriz tambien lo agrego a los puntosObjetivo)
+    public void agregarObjetivo(Punto ptoObjetivo) { // asumir que es una localidad valida (o sea NO central), usar este metodo a medida que se crea la grilla
         puntosObjetivo.add(matrizLocs[ptoObjetivo.y][ptoObjetivo.x].punto);
     }
 

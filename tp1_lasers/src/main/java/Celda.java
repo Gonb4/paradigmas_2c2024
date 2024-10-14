@@ -52,15 +52,13 @@ public class Celda {
             rectangulo.setTranslateY(dragY);
         });
         rectangulo.setOnMouseReleased(ev -> {
-//            rectangulo.setTranslateX(0);
-//            rectangulo.setTranslateY(0);
             double releaseX = ev.getSceneX();
             double releaseY = ev.getSceneY();
-            int destX = (int) ((releaseX - 83)/35);
-            int destY = (int) ((releaseY - 30)/35); // VER COMO JUSTIFICAR ESTE 83
+            int destX = (int) ((releaseX - (Constantes.ANCHO_BOTON + Constantes.MARGEN_GRILLA)) / (Constantes.CELL_SIZE / 2));
+            int destY = (int) ((releaseY - Constantes.MARGEN_GRILLA) / (Constantes.CELL_SIZE / 2));
             if (destX % 2 == 0) {destX += 1;}
             if (destY % 2 == 0) {destY += 1;}
-            System.out.println(destX + ", " + destY);
+
             juego.jugarTurno(bloque, destX, destY);
         });
     }

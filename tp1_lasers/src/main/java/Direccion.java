@@ -17,12 +17,4 @@ public enum Direccion {
         int sigY = punto.y + modificadorY;
         return new Punto(sigX, sigY);
     }
-
-    public int siguienteX(int x) {
-        return x + modificadorX;
-    }
-
-    public int siguienteY(int y) {
-        return y + modificadorY;
-    }
 }

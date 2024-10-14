@@ -7,7 +7,6 @@ public class BloqueVidrio extends Bloque {
 
     @Override
     public Punto colisionar(Laser laser, Punto ptoColision, Grilla grilla) {
-        // laser.bifurcar(punto, grilla)
         if (ptoColision.equals(ptoArriba)) {
             switch (laser.getDireccion()) {
                 case SURESTE -> laser.bifurcar(grilla, ptoColision, Direccion.NORESTE);
