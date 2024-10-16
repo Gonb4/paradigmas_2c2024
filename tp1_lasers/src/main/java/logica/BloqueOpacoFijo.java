@@ -1,7 +1,14 @@
-public class BloqueOpacoMovil extends Bloque {
-    public BloqueOpacoMovil(Punto ptoCen) {
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
+public class BloqueOpacoFijo extends Bloque {
+    public BloqueOpacoFijo(Punto ptoCen) {
         super(ptoCen);
-        this.movil = true;
+        this.movil = false;
         this.prioridadColision = Constantes.PRIORIDAD_COLISION_OPACO;
     }
 

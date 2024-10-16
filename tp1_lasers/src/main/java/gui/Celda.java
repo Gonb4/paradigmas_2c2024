@@ -1,3 +1,10 @@
+package gui;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 

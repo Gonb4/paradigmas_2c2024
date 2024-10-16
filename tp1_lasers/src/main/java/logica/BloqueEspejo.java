@@ -1,3 +1,10 @@
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 public class BloqueEspejo extends Bloque {
     public BloqueEspejo(Punto ptoCen) {
         super(ptoCen);

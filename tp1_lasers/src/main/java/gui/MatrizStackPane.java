@@ -1,3 +1,10 @@
+package gui;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;

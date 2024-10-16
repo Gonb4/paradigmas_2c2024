@@ -1,3 +1,10 @@
+package utilidades;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

@@ -1,3 +1,10 @@
+package utilidades;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 public final class Constantes {
     public static final int PRIORIDAD_COLISION_VIDRIO = 0;
     public static final int PRIORIDAD_COLISION_ESPEJO = 1;

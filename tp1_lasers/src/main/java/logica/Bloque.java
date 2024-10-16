@@ -1,3 +1,10 @@
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 public abstract class Bloque {
     Punto ptoCentro;
     Punto ptoArriba;

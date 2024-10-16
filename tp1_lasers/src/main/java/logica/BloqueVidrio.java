@@ -1,3 +1,10 @@
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 public class BloqueVidrio extends Bloque {
     public BloqueVidrio(Punto ptoCen) {
         super(ptoCen);

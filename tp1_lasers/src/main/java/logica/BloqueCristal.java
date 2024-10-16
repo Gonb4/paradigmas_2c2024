@@ -1,3 +1,10 @@
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 public class BloqueCristal extends Bloque {
     public BloqueCristal(Punto ptoCen) {
         super(ptoCen);

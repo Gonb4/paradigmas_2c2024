@@ -1,5 +1,13 @@
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
+
 
 public class Grilla { // ACA ES IMPORTANTE USAR SIEMPRE LA MISMA INSTANCIA DE UN PUNTO QUE TENGA UNAS COORDENADAS DETERMINADAS
     private final Localidad[][] matrizLocs;

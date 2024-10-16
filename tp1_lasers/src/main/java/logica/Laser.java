@@ -1,3 +1,10 @@
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 import java.util.ArrayList;
 
 public class Laser {

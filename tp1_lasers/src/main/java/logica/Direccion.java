@@ -1,3 +1,10 @@
+package logica;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 public enum Direccion {
     NORESTE(1, -1),
     SURESTE(1, 1),

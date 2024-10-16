@@ -1,3 +1,10 @@
+package app;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;

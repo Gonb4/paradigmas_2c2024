@@ -1,3 +1,10 @@
+package utilidades;
+
+import utilidades.*;
+import logica.*;
+import gui.*;
+import app.*;
+
 public class Punto {
     public final int x;
     public final int y;
