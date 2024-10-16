@@ -29,7 +29,7 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>Juego</mainClass>
-                    <executable>C:\Users\Gon\.jdks\openjdk-23\bin\java.exe</executable>
+<!--                    <executable>C:\Users\Gon\.jdks\openjdk-23\bin\java.exe</executable> tenia java 8 instalado y esto era para que corriera con java23 en vez de java8-->
                 </configuration>
             </plugin>
         </plugins>
