@@ -39,12 +39,24 @@
     DOWN (if (= (pc :fil) (dec MAX_FILAS)) (assoc pc :fil 0) (update pc :fil inc))
     LEFT (if (zero? (pc :col)) (assoc pc :col (dec MAX_COLUMNAS)) (update pc :col dec))
     RIGHT (if (= (pc :col) (dec MAX_COLUMNAS)) (assoc pc :col 0) (update pc :col inc))
-    )
+  )
 )
 
-;(defn operacion [stack op]
-;
-;)
+(defn first_st [stack]
+  (if (empty? stack) 0 (first stack))
+)
+
+(defn second_st [stack]
+  (if (empty? (rest stack)) 0 (second stack))
+)
+
+(defn op_aritm [stack op]
+  (let [valor1 (second_st stack)
+        valor2 (first_st stack)
+        resultado (int (op valor1 valor2))]
+  (conj (drop 2 stack) resultado)
+  )
+)
 
 
 (defn -main [ruta]
@@ -55,35 +67,35 @@
     (let [ch (get-in toroide [(pc :fil) (pc :col)])]
     (cond
       (= ch \") (recur toroide (inc_pc pc) stack (not str_mode))
-      str_mode (recur toroide (inc_pc pc) (conj stack (ascii ch)) true)
-      (es_numero? ch) (recur toroide (inc_pc pc) (conj stack (num_ch_a_int ch)) false)
+      str_mode (recur toroide (inc_pc pc) (conj stack (ascii ch)) str_mode)
+      (es_numero? ch) (recur toroide (inc_pc pc) (conj stack (num_ch_a_int ch)) str_mode)
       :instr (case ch
-               \+ 
-               \-
-               \*
-               \/
-               \%
-               \!
-               \`
-               \>
-               \<
-               \^
-               \v
-               \?
-               \_
-               \|
-               \"
-               \:
-               \\
-               \$
-               \.
-               \,
-               \#
+               \+ (recur toroide (inc_pc pc) (op_aritm stack +) str_mode)
+               \- (recur toroide (inc_pc pc) (op_aritm stack -) str_mode)
+               \* (recur toroide (inc_pc pc) (op_aritm stack *) str_mode)
+               \/ (recur toroide (inc_pc pc) (op_aritm stack /) str_mode)
+               \% (recur toroide (inc_pc pc) (op_aritm stack rem) str_mode)
+               \! (recur toroide (inc_pc pc) (conj (rest stack) (if (zero? (first_st stack)) 1 0)) str_mode)
+               \` (recur toroide (inc_pc pc) (conj (drop 2 stack) (if (> (second_st stack) (first_st stack)) 1 0)) str_mode)
+               \> (recur toroide (inc_pc (assoc pc :dir RIGHT)) stack str_mode)
+               \< (recur toroide (inc_pc (assoc pc :dir LEFT)) stack str_mode)
+               \^ (recur toroide (inc_pc (assoc pc :dir UP)) stack str_mode)
+               \v (recur toroide (inc_pc (assoc pc :dir DOWN)) stack str_mode)
+               \? (recur toroide (inc_pc (assoc pc :dir (rand-nth [UP, DOWN, LEFT, RIGHT]))) stack str_mode)
+               \_ (recur toroide (inc_pc (assoc pc :dir (if (zero? (first_st stack)) RIGHT LEFT))) (rest stack) str_mode)
+               \| (recur toroide (inc_pc (assoc pc :dir (if (zero? (first_st stack)) DOWN UP))) (rest stack) str_mode)
+               \: (recur toroide (inc_pc pc) (if (empty? stack) '(0 0) (conj stack (first_st stack))) str_mode)
+               \\ (recur toroide (inc_pc pc) (conj (drop 2 stack) (first_st stack) (second_st stack)) str_mode)
+               \$ (recur toroide (inc_pc pc) (rest stack) str_mode)
+               \. (do (print (first_st stack)) (recur toroide (inc_pc pc) (rest stack) str_mode))
+               \, (do (print (char (first_st stack))) (recur toroide (inc_pc pc) (rest stack) str_mode))
+               \# (recur toroide (inc_pc (inc_pc pc)) stack str_mode)
                \g
                \p
                \&
                \~
-               \@ (println "fin")
+               \space (recur toroide (inc_pc pc) stack str_mode)
+               \@ (println stack)
                :else (println "Error: instruccion desconocida"))
     )
     )
