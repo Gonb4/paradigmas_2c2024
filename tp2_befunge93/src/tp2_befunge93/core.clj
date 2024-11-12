@@ -58,6 +58,24 @@
   )
 )
 
+(defn input_int []
+  (loop [chs (map char (read-line))
+         num ""]
+    (if (es_numero? (first chs))
+      (recur (rest chs) (str num (first chs)))
+      (Integer/parseInt num)
+    )
+  )
+)
+
+(defn input_ch []
+  (first (map char (read-line)))
+)
+
+(defn en_rango? [fil col]
+  (and (and (>= fil 0) (< fil MAX_FILAS)) (and (>= col 0) (< col MAX_COLUMNAS)))
+)
+
 
 (defn -main [ruta]
   (loop [toroide (parsear_archivo ruta)
@@ -90,12 +108,14 @@
                \. (do (print (first_st stack)) (recur toroide (inc_pc pc) (rest stack) str_mode))
                \, (do (print (char (first_st stack))) (recur toroide (inc_pc pc) (rest stack) str_mode))
                \# (recur toroide (inc_pc (inc_pc pc)) stack str_mode)
-               \g
-               \p
-               \&
-               \~
+               \g (recur toroide (inc_pc pc)
+                         (let [f (first_st stack) c (second_st stack)] (conj (drop 2 stack) (if (en_rango? f c) (ascii (get-in toroide [f c])) 0)))
+                         str_mode)
+               \p (recur (rmpl_elem toroide (first_st stack) (second_st stack) (char (first_st (drop 2 stack)))) (inc_pc pc) (drop 3 stack) str_mode)
+               \& (recur toroide (inc_pc pc) (conj stack (input_int)) str_mode)
+               \~ (recur toroide (inc_pc pc) (conj stack (ascii (input_ch))) str_mode)
                \space (recur toroide (inc_pc pc) stack str_mode)
-               \@ (println stack)
+               \@ ;(do (println stack) (run! println toroide))
                :else (println "Error: instruccion desconocida"))
     )
     )
