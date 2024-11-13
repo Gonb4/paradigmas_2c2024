@@ -105,7 +105,7 @@
                \: (recur toroide (inc_pc pc) (if (empty? stack) '(0 0) (conj stack (first_st stack))) str_mode)
                \\ (recur toroide (inc_pc pc) (conj (drop 2 stack) (first_st stack) (second_st stack)) str_mode)
                \$ (recur toroide (inc_pc pc) (rest stack) str_mode)
-               \. (do (print (first_st stack)) (recur toroide (inc_pc pc) (rest stack) str_mode))
+               \. (do (print (first_st stack) " ") (recur toroide (inc_pc pc) (rest stack) str_mode))
                \, (do (print (char (first_st stack))) (recur toroide (inc_pc pc) (rest stack) str_mode))
                \# (recur toroide (inc_pc (inc_pc pc)) stack str_mode)
                \g (recur toroide (inc_pc pc)
@@ -121,38 +121,3 @@
     )
   )
 )
-
-;pc como lista '(fil col dir), despues lo tomo con apply
-;o como diccionario {:fil ,,, :col ,,, :dir ,,,}
-
-
-;(map str (slurp "src/tp2_befunge93/hello.bf"))
-;(mapv char (slurp "src/tp2_befunge93/hello.bf"))
-
-(defn inc_col [col]
-  (rem (inc col) 80)
-  )
-
-(defn inc_fil [fil]
-  (rem (inc fil) 25)
-  )
-
-(defn fact
-  ([n] (fact n 1))
-  ([n resultado] (if (zero? n) resultado
-                               (recur (dec n) (* resultado n)))))
-
-;(loop [stack '()]
-;  (do
-;    (if (some-condition? stack)
-;      stack
-;      (let [stack (conj stack 1)]))
-;    (recur stack)
-;  )
-;)
-
-;(defn prueba [a b c]
-;  (if (zero? c)
-;    a
-;    (recur [a b 0]))
-;)
