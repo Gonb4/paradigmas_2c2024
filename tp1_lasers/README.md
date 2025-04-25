@@ -9,7 +9,7 @@ Se aplicarán conceptos de:
 
 ## Reglas de juego
 
-<video controls src="./enunciado_img/lasers.webm" type="video/webm"></video>
+<video controls src="./tp1_lasers/enunciado_img/lasers.webm" type="video/webm"></video>
 
 * Lasers es un juego de estilo _puzzle_, que se desarrolla por turnos hasta que
   el jugador encuentra la solución del problema.
@@ -29,27 +29,27 @@ Se aplicarán conceptos de:
       Hay bloques de diferentes tipos:
         * Bloque opaco fijo: Absorbe rayos laser. No se puede mover.
 
-          ![F](/enunciado_img/F.png)
+          ![F](/tp1_lasers/enunciado_img/F.png)
 
         * Bloque opaco móvil: Absorbe rayos laser.
 
-          ![B](/enunciado_img/B.png)
+          ![B](/tp1_lasers/enunciado_img/B.png)
 
         * Bloque espejo: Refleja los rayos laser.
 
-          ![R](/enunciado_img/R.png)
+          ![R](/tp1_lasers/enunciado_img/R.png)
 
         * Bloque de vidrio: Al ser alcanzado por un rayo, el rayo se difracta
           en 2. Un rayo es reflejado (al igual que el bloque espejo), y el otro
           continúa con la misma dirección (como si no hubiera ningún bloque).
 
-          ![G](/enunciado_img/G.png)
+          ![G](/tp1_lasers/enunciado_img/G.png)
 
         * Bloque de cristal: Al ser alcanzado por un rayo, el rayo se refracta,
           continuando en línea recta y saliendo por el extremo opuesto del
           bloque, con la misma dirección de origen.
 
-          ![C](/enunciado_img/C.png)
+          ![C](/tp1_lasers/enunciado_img/C.png)
 
 * En cada turno, el jugador puede mover un Bloque (que no sea fijo) a cualquier
   celda que esté libre (y que tenga un Piso).
